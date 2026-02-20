@@ -67,7 +67,6 @@ hiring-suite/
 ├── app.py                    # Flask routes
 ├── requirements.txt
 ├── .env                      # GEMINI_API_KEY (not committed)
-├── Procfile                  # Render deployment
 │
 ├── core/
 │   ├── resume_parser.py      # PDF → clean text
