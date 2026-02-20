@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hiring Suite — Screen Candidates</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo"></div>
+            <h1>AI Hiring Suite</h1>
+        </div>
+        <div class="nav-status">System Online</div>
+    </nav>
+
+    <div class="container fade-up">
+        <div class="page-header">
+            <div class="eyebrow">Candidate Screening</div>
+            <h2>Find the Right Engineer</h2>
+            <p>Upload a job description and candidate resumes. The system ranks each candidate by semantic fit and keyword coverage.</p>
+        </div>
+
+        {% if error %}
+        <div class="error-box">{{ error }}</div>
+        {% endif %}
+
+        <form action="/analyze" method="POST" enctype="multipart/form-data">
+            <div class="card" style="margin-bottom: 1.25rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>
+                        Job Description
+                        <span class="label-hint">— paste the full JD</span>
+                    </label>
+                    <textarea name="jd_text" placeholder="We are looking for a Python engineer with experience in machine learning, Flask, and REST API development..."></textarea>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>
+                        Resumes
+                        <span class="label-hint">— PDF format, multiple allowed</span>
+                    </label>
+                    <div class="file-drop">
+                        <input type="file" name="resumes" accept=".pdf" multiple>
+                        <span class="drop-icon">📄</span>
+                        <div class="drop-text">Drop PDF resumes here or click to browse</div>
+                        <div class="drop-sub">Multiple files supported · Max 10MB each</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <span>▶</span> Run Analysis
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const drop = document.querySelector('.file-drop');
+        const input = drop.querySelector('input[type="file"]');
+        const dropText = drop.querySelector('.drop-text');
+
+        input.addEventListener('change', () => {
+            const count = input.files.length;
+            if (count > 0) {
+                dropText.textContent = `${count} file${count > 1 ? 's' : ''} selected`;
+                drop.style.borderColor = 'var(--cyan)';
+                drop.style.background = 'var(--cyan-dim)';
+            }
+        });
+    </script>
+
+    <footer>
+        <span>Built by</span>
+        <a href="https://suyogmauni.com.np/" target="_blank" rel="noopener">Suyog Mauni</a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Review — {{ name }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo"></div>
+            <h1>AI Hiring Suite</h1>
+        </div>
+        <div class="nav-status">Code Review</div>
+    </nav>
+
+    <div class="container fade-up">
+        <div class="page-header">
+            <div class="eyebrow">Code Review</div>
+            <h2>{{ name }}</h2>
+            <p>AI-powered analysis of code quality, security, and style.</p>
+        </div>
+
+        {% if review.error %}
+            <div class="error-box">{{ review.error }}</div>
+            {% if review.raw %}
+            <div class="refactor-block" style="margin-top: 1rem;">
+                <div class="refactor-header">Raw Response</div>
+                <pre><code>{{ review.raw }}</code></pre>
+            </div>
+            {% endif %}
+
+        {% else %}
+        <div class="review-header">
+            <div class="grade grade-{{ review.grade }}">{{ review.grade }}</div>
+            <div class="review-meta">
+                <div class="lang-badge">{{ review.language }}</div>
+                <h3>{{ review.summary }}</h3>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-chip {% if review.bugs|length > 0 %}critical{% endif %}">
+                Bugs <span class="stat-val">{{ review.bugs|length }}</span>
+            </div>
+            <div class="stat-chip {% if review.security_issues|length > 0 %}critical{% endif %}">
+                Security <span class="stat-val">{{ review.security_issues|length }}</span>
+            </div>
+            <div class="stat-chip">
+                Style Issues <span class="stat-val">{{ review.style_issues|length }}</span>
+            </div>
+            <div class="stat-chip {% if review.complexity == 'Low' %}ok{% endif %}">
+                Complexity <span class="stat-val">{{ review.complexity }}</span>
+            </div>
+            <div class="stat-chip {% if review.maintainability == 'High' %}ok{% elif review.maintainability == 'Low' %}critical{% endif %}">
+                Maintainability <span class="stat-val">{{ review.maintainability }}</span>
+            </div>
+        </div>
+
+        <div class="review-grid">
+            <div class="review-section">
+                <h3>✓ Strengths</h3>
+                {% if review.strengths %}
+                <ul>{% for s in review.strengths %}<li>{{ s }}</li>{% endfor %}</ul>
+                {% else %}
+                <div class="empty-state">No notable strengths identified.</div>
+                {% endif %}
+            </div>
+
+            <div class="review-section danger">
+                <h3>Bugs</h3>
+                {% if review.bugs %}
+                <ul>{% for b in review.bugs %}<li>{{ b }}</li>{% endfor %}</ul>
+                {% else %}
+                <div class="empty-state">No bugs detected.</div>
+                {% endif %}
+            </div>
+
+            <div class="review-section warning">
+                <h3>Security Issues</h3>
+                {% if review.security_issues %}
+                <ul>{% for s in review.security_issues %}<li>{{ s }}</li>{% endfor %}</ul>
+                {% else %}
+                <div class="empty-state">No security issues detected.</div>
+                {% endif %}
+            </div>
+
+            <div class="review-section">
+                <h3>Style</h3>
+                {% if review.style_issues %}
+                <ul>{% for s in review.style_issues %}<li>{{ s }}</li>{% endfor %}</ul>
+                {% else %}
+                <div class="empty-state">No style issues detected.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if review.refactored_snippet %}
+        <div class="refactor-block">
+            <div class="refactor-header">
+                <span>Suggested Refactor</span>
+                <span style="color: var(--text-mute);">{{ review.language }}</span>
+            </div>
+            <pre><code>{{ review.refactored_snippet }}</code></pre>
+        </div>
+        {% endif %}
+
+        {% endif %}
+
+        <a href="javascript:history.back()" class="btn-back">← Back to Results</a>
+    </div>
+
+    <footer>
+        <span>Built by</span>
+        <a href="https://suyogmauni.com.np/" target="_blank" rel="noopener">Suyog Mauni</a>
+    </footer>
+</body>
+</html>

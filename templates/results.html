@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hiring Suite — Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo"></div>
+            <h1>AI Hiring Suite</h1>
+        </div>
+        <div class="nav-status">Analysis Complete</div>
+    </nav>
+
+    <div class="container-wide fade-up">
+        <div class="page-header">
+            <div class="eyebrow">Screening Results</div>
+            <h2>{{ reports|length }} Candidate{{ 's' if reports|length != 1 else '' }} Ranked</h2>
+            <p>Sorted by semantic fit score. Click any candidate to run a code review.</p>
+        </div>
+
+        <div class="results-meta">
+            <span class="meta-badge">{{ reports|length }} Candidates</span>
+            <span class="jd-preview">JD: {{ jd_preview }}…</span>
+        </div>
+
+        {% for r in reports %}
+        <div class="candidate-card rank-{{ loop.index }}">
+            <div class="rank-badge">
+                {% if loop.index == 1 %}★ TOP{% else %}#{{ loop.index }}{% endif %}
+            </div>
+
+            <div class="card-top">
+                <div class="candidate-avatar">
+                    {{ r.name[0].upper() }}
+                </div>
+                <div>
+                    <div class="candidate-name">{{ r.name }}</div>
+                    <div class="match-label">{{ r.resume_score.label }}</div>
+                </div>
+            </div>
+
+            <div class="score-row">
+                <div class="score-bar">
+                    <div class="score-fill" style="width: {{ r.final_pct }}%"></div>
+                </div>
+                <div class="score-num">{{ r.final_pct }}%</div>
+            </div>
+
+            {% set rec = r.recommendation %}
+            <div class="recommendation
+                {% if rec == 'Strong Hire' %}rec-hire
+                {% elif rec == 'Consider' %}rec-consider
+                {% elif rec == 'Maybe' %}rec-maybe
+                {% else %}rec-pass{% endif %}">
+                {% if rec == 'Strong Hire' %}✓{% elif rec == 'Pass' %}✗{% else %}◆{% endif %}
+                {{ r.recommendation }}
+            </div>
+
+            <div class="keyword-section">
+                {% if r.resume_score.keyword_gap.present %}
+                <div class="keyword-row">
+                    <span class="keyword-label">Present</span>
+                    {% for k in r.resume_score.keyword_gap.present %}
+                    <span class="tag green">{{ k }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if r.resume_score.keyword_gap.missing %}
+                <div class="keyword-row">
+                    <span class="keyword-label">Missing</span>
+                    {% for k in r.resume_score.keyword_gap.missing %}
+                    <span class="tag red">{{ k }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <form action="/code-review" method="POST" class="code-form">
+                <input type="hidden" name="candidate_name" value="{{ r.name }}">
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                    <label>Code Review <span class="label-hint">— optional, paste a code sample</span></label>
+                    <textarea name="code" placeholder="def predict(data):&#10;    # paste candidate's code here..."></textarea>
+                </div>
+                <button type="submit" class="btn-secondary">
+                    <span>◎</span> Review Code
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+
+        <a href="/" class="btn-back">← New Analysis</a>
+    </div>
+
+    <footer>
+        <span>Built by</span>
+        <a href="https://suyogmauni.com.np/" target="_blank" rel="noopener">Suyog Mauni</a>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.score-fill').forEach(el => {
+            const target = el.style.width;
+            el.style.width = '0%';
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    el.style.width = target;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
