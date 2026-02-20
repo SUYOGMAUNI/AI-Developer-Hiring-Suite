@@ -94,8 +94,8 @@ hiring-suite/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/SUYOGMAUNI/ai-developer-hiring-suite
-cd ai-developer-hiring-suite
+git clone https://github.com/SUYOGMAUNI/AI-Developer-Hiring-Suite.git
+cd Ai-Developer-Hiring-Suite
 ```
 
 ### 2. Create a virtual environment
@@ -180,19 +180,6 @@ Final = (similarity × 0.6) + (code_grade_score × 0.4)
 | D | 0.35 | Multiple bugs, poor structure |
 | F | 0.10 | Broken, insecure, unreadable |
 
----
-
-## Deployment on Render
-
-1. Push your repo to GitHub
-2. Go to [render.com](https://render.com) → New Web Service
-3. Connect your GitHub repo
-4. Set **Build Command**: `pip install -r requirements.txt`
-5. Set **Start Command**: `gunicorn app:app`
-6. Add environment variable: `GEMINI_API_KEY=your_key`
-7. Deploy
-
----
 
 ## Environment Variables
 
